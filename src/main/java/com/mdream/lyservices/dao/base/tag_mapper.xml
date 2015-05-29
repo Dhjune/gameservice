@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="com.mdream.lyservices.dao.base.TagMapper">
+
+	<resultMap type="com.mdream.lyservices.model.game.tag.TagObject" id="tag_reslut">
+		
+		<result property="tagid" column="id"/>
+		<result property="tagname" column="name"/>
+						
+	</resultMap>
+			
+	<select id="getGameTags" resultMap="tag_reslut" parameterType="int">
+			
+		SELECT t.id,t.name
+		FROM tag t,game_tag_ref ref 
+		WHERE ref.tagId =  t.id AND  ref.gameId = #{gameid}	AND ref.status = 1	
+	</select>
+	
+	<select id="getTypeTags" resultMap="tag_reslut" parameterType="int">
+		
+		SELECT t.id,t.name
+		FROM tag t,type_tag_ref ref 
+		WHERE ref.tagId =  t.id AND  ref.gameTypeId = #{typeid}	AND ref.status = 1		
+		
+	</select>
+	 
+	
+</mapper>

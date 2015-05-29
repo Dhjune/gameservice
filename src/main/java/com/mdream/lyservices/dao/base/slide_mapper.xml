@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="com.mdream.lyservices.dao.base.SlideMapper">
+
+	<resultMap type="com.mdream.lyservices.model.base.slide.SlideShowObject" id="slideshow_reslut">
+		
+		<result property="showid" column="id"/>
+		<result property="showtype" column="type"/>
+		<result property="showicon" column="icon"/>
+		<collection property="slides"  column="id" select="getSlidesByShowId"></collection>
+				
+	</resultMap>
+	
+	<resultMap type="com.mdream.lyservices.model.base.slide.SlideObject" id="slide_reslut">
+		
+		<result property="slideid" column="id"/>
+		<result property="slidetype" column="type"/>
+		<result property="imgurl" column="imgUrl"/>		
+		<result property="content" column="content"/>
+		<result property="refid" column="refId"/>		
+		<result property="refurl" column="refUrl"/>		
+	</resultMap>
+		
+	<select id="getSlideShow" resultMap="slideshow_reslut" parameterType="HashMap">		
+		SELECT id,type,icon
+		FROM slide_show 
+		WHERE type = #{showtype} AND scene=#{scene} AND status=1	
+	</select>
+	
+	<select id="getSlidesByShowId" resultMap="slide_reslut" parameterType="int">
+		
+		SELECT  sl.id ,sl.type,sl.imgUrl,sl.content,sl.refId,sl.refUrl
+		FROM slide sl,slide_show_ref ref
+		WHERE sl.id = ref.slideId  AND ref.slideShowId = #{showid} AND ref.status = 1 AND sl.status = 1	 	
+		
+	</select>
+	 
+	
+</mapper>

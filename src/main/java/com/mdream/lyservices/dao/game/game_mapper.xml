@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="com.mdream.lyservices.dao.game.GameMapper">
+	
+	<resultMap type="com.mdream.lyservices.model.game.GameObject" id="game_result">			
+		<result property="gameid" column="id"/>
+		<result property="gamename" column="name"/>
+		<result property="gameurl" column="url"/>
+		<result property="gameicon" column="icon"/>
+		<result property="gamestar" column="star"/>
+		<result property="hotflag" column="hotflag"/>
+		<result property="recommendflag" column="recommend"/>
+		<result property="godflag" column="godflag"/>
+		<result property="nowflag" column="nowflag"/>		
+	</resultMap>
+	
+	<resultMap type="com.mdream.lyservices.model.game.info.GameInfoObject" id="gameinfo_result">
+	
+		<result property="gameid" column="id"/>
+		<result property="description" column="description"/>
+		<result property="belittlecount" column="belittle"/>
+		<result property="praisecount" column="praise"/>
+		<result property="gameimg" column="img"/>
+		<result property="gamename" column="name"/>
+		<result property="gameurl" column="url"/>
+		<result property="gameicon" column="icon"/>
+		<result property="gamestar" column="star"/>
+		<result property="hotflag" column="hotflag"/>
+		<result property="recommendflag" column="recommend"/>
+		<result property="godflag" column="godflag"/>
+		<result property="nowflag" column="nowflag"/>
+		<collection property="comments" column="id" select="com.mdream.lyservices.dao.game.CommentMapper.getCommentsBygameId"></collection>
+		<collection property="types" column="id" select="com.mdream.lyservices.dao.game.TypeMapper.getGameTypes"> </collection>
+		<collection property="pics" column="id" select="getGamePics"></collection>
+		
+	</resultMap>
+	
+	<resultMap type="com.mdream.lyservices.model.game.pics.GamePicObject" id="gamepic_result">
+		<result property="picid" column="id"/>
+		<result property="picurl" column="picUrl"/>		
+	</resultMap>
+	
+	
+			
+	<select id="getGameListByFlag" resultMap="game_result" parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper">
+		SELECT id,name,icon,url,star,godflag,hotflag,nowflag,recommend
+		FROM game 
+		WHERE 1=1 AND status = 1 <if test="flag !=null">
+					<if test="flag == 1">
+						AND	recommend = 1
+					</if>
+					<if test="flag ==2">
+						AND hotflag = 1
+					</if>
+					
+					<if test="flag ==3">
+						AND nowflag = 1
+					</if>										
+			  </if>	
+			  	
+	    LIMIT #{start_row},#{end_row}		  	
+	</select>
+	
+	<select id="getGameList" resultMap="game_result" parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper">
+		SELECT id,name,icon,url,star,godflag,hotflag,nowflag,recommend
+		FROM game 
+		WHERE 1=1 AND status = 1 			  	
+	    LIMIT #{start_row},#{end_row}		  	
+	</select>
+	
+	<select id="getGameListByType" resultMap="game_result" parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper">
+		SELECT gm.id,gm.name,gm.icon,gm.url,gm.star,gm.godflag,gm.hotflag,gm.nowflag,gm.recommend
+		FROM game gm,game_type_ref ref
+		WHERE gm.id =  ref.gameId AND ref.gameTypeId = #{typeid} AND ref.status = 1
+	    LIMIT #{start_row},#{end_row}		  	
+	</select>
+	
+	<select id="getGameInfo" resultMap="gameinfo_result" parameterType="int">
+		
+		SELECT * FROM game WHERE id = #{gameid} AND status=1
+		
+	</select>
+	
+	<select id="getGamePics" resultMap="gamepic_result" parameterType="int">	
+		SELECT id,picUrl FROM game_pic WHERE gameId = #{gameid}		
+	</select>
+	
+	
+	<update id="addPraiseCount" parameterType="int">
+		UPDATE game SET praise = praise + 1 WHERE id = #{gameid} 
+	</update>
+	
+	
+	<update id="addBelittleCount" parameterType="int">
+		UPDATE game SET belittle = belittle+1 WHERE id = #{gameid} 
+	</update>
+	
+	<select id="gameSearch" resultMap="game_result" parameterType="com.mdream.lyservices.model.game.search.SearchPageKeeper" >
+		
+		SELECT id,name,icon,url,star,godflag,hotflag,nowflag,recommend
+		FROM game 
+		WHERE name  LIKE CONCAT('%','${gamename}','%') AND status=1  LIMIT #{start_row},#{end_row}
+		
+	</select>
+	
+	
+	<select id="gameListByTypeCount" resultType="int"  parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper" >
+		
+		SELECT count(*) count
+		FROM game gm,game_type_ref ref
+		
+		WHERE gm.id =  ref.gameId AND ref.gameTypeId = #{typeid} AND ref.status = 1
+		
+	</select>
+	
+	<select id="gameListByFlagCount" resultType="int"  parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper" >
+		
+		SELECT count(*) count
+		FROM game 
+		WHERE 1=1 AND status = 1 <if test="flag !=null">
+					<if test="flag == 1">
+						AND	recommend = 1
+					</if>
+					<if test="flag ==2">
+						AND hotflag = 1
+					</if>
+					
+					<if test="flag == 3">
+						AND nowflag = 1
+					</if>										
+			  </if>	
+		
+	</select>
+	
+	
+	<select id="gameListCount" resultType="int"   >
+		
+		SELECT count(*) count
+		FROM game 
+		WHERE status = 1 
+		
+	</select>
+	
+	<select id="gameSearchCount" resultType="int"  parameterType="com.mdream.lyservices.model.game.search.SearchPageKeeper" >
+		
+		SELECT count(*) count
+		FROM game 
+		WHERE name LIKE CONCAT('%','${gamename}','%') AND status=1
+		
+	</select>
+	
+	<select id="getBelittleCount" parameterType="int" resultType="int">
+	
+		SELECT belittle FROM game WHERE id=#{gameid} 
+		
+	</select>
+	
+	<select id="getPraiseCount" parameterType="int" resultType="int">
+	
+		SELECT praise FROM game WHERE id=#{gameid}
+		
+	</select>
+			
+	
+</mapper>

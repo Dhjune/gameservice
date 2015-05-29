@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="com.mdream.lyservices.dao.game.CommentMapper">
+	
+	<resultMap type="com.mdream.lyservices.model.game.comment.CommentObject" id="comment_result">
+		<result property="commentid" column="id"/>
+		<result property="content" column="content"/>
+		<result property="gameid" column="gameid"/>
+		<result property="count" column="count"/>
+	</resultMap>
+	
+	<select id="getComment" resultMap="comment_result" parameterType="HashMap">
+		SELECT comment.id,ref.gameId,comment.content,ref.count		
+		FROM game_comment comment,game_comment_ref ref	
+		WHERE ref.commentId = comment.id AND ref.commentId = #{commentid},ref.gameId=#{gameid} AND ref.status = 1			
+	</select>
+	
+	<select id="getCommentsBygameId" resultMap="comment_result" parameterType="int">
+		SELECT comment.id,ref.gameId,comment.content,ref.count		
+		FROM game_comment comment,game_comment_ref ref	
+		WHERE ref.commentId = comment.id AND ref.gameId=#{gameid} AND ref.status = 1	
+	</select>
+	
+	
+	<update id="addCount" parameterType="HashMap">
+	
+		 UPDATE game_comment_ref 
+		 SET count=count+1
+		 WHERE gameId=#{gameid} AND commentId=#{commentid}  
+		 
+ 	</update>
+ 	
+ 	<select id="getGameCommentCount" resultType="int" parameterType="HashMap">
+ 	
+ 		SELECT count FROM game_comment_ref WHERE gameId = #{gameid} AND commentId =#{commentid} 
+ 	
+ 	</select>
+	
+	
+</mapper>

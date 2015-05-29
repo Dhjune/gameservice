@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="com.mdream.lyservices.dao.base.BaseMapper">
+
+	<resultMap type="com.mdream.lyservices.model.base.Application" id="application_reslut">
+	
+	<result property="appid" column="id"/>
+	<result property="appname" column="appName"/>
+	<result property="applogo" column="appLogo"/>
+	<result property="appurl" column="appUrl"/>
+	<result property="appversion" column="appVersion"/>
+	
+	</resultMap>
+	
+	<select id="getAppinfo" resultMap="application_reslut" parameterType="int">
+		
+		SELECT id,appName,appLogo,appUrl,appVersion
+		FROM app_base 
+		WHERE id=#{id} and status=1
+		
+	</select>
+	
+	 
+	
+</mapper>
