@@ -10,7 +10,7 @@ public class PageKeeper {
 	
 	public PageKeeper(int page,int rows){
 		start_row = rows*(page-1);
-		end_row = page*rows;
+		end_row = rows;
 		this.page = page;
 		this.rows = rows;
 	}
