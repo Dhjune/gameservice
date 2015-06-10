@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,11 @@ import com.mdream.lyservices.service.game.GameServiceImp;
 @RequestMapping("game")
 public class GameController {
 	
+	//区分日志输出,避免重叠输出,具体看配置文件
+	//private static Log log=LogFactory.getLog("sys");  
+	
+	//private static Log log1=LogFactory.getLog(GameController.class);  
+	
 	@Autowired
 	private GameServiceImp  gameServiceImp;
 	
@@ -47,10 +54,14 @@ public class GameController {
 		BaseValueObject<ListGameObject> vo =  new BaseValueObject<ListGameObject>();		
 		try {
 			lg = gameServiceImp.getListGameObjectByFlag(new ListPageKeeper(page, 10, flag, ""));
-			lg.setPage(page);
-		
-			vo.setContent(lg);			
+			lg.setPage(page);		
+			vo.setContent(lg);
+			throw new Exception();
 		} catch (Exception e) {
+		//	log.info("发生错误异常");
+		//	log.error("未知错误");
+			
+		//	e.printStackTrace();
 			vo.setEcode(ReturnCode.FAILED);
 			vo.setEmsg(ReturnMsg.FAILED_MSG);
 		}
