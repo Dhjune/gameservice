@@ -9,6 +9,7 @@
 		<mapper resource="com/mdream/lyservices/dao/base/slide_mapper.xml"/>
 		<mapper resource="com/mdream/lyservices/dao/base/tag_mapper.xml"/>
 		<mapper resource="com/mdream/lyservices/dao/game/game_mapper.xml"/>
+		<mapper resource="com/mdream/lyservices/dao/game/pushgame_mapper.xml"/>
 		<mapper resource="com/mdream/lyservices/dao/game/comment_mapper.xml"/>
 		<mapper resource="com/mdream/lyservices/dao/game/type_mapper.xml"/>
 	</mappers>

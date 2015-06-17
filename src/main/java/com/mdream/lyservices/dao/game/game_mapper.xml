@@ -73,7 +73,7 @@
 	<select id="getGameListByType" resultMap="game_result" parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper">
 		SELECT gm.id,gm.name,gm.icon,gm.url,gm.star,gm.godflag,gm.hotflag,gm.nowflag,gm.recommend
 		FROM game gm,game_type_ref ref
-		WHERE gm.id =  ref.gameId AND ref.gameTypeId = #{typeid} AND ref.status = 1
+		WHERE gm.id =  ref.gameId AND ref.gameTypeId = #{typeid} AND ref.status = 1 ORDER BY ref.sort ASC
 	    LIMIT #{start_row},#{end_row}		  	
 	</select>
 	

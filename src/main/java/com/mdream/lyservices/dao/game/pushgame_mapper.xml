@@ -2,3 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace和定义的Mapper接口对应，并实现其中的方法 -->
+<mapper namespace="com.mdream.lyservices.dao.game.PushGameMapper">
+
+	<select id="getPushGameListByFlag" resultMap="com.mdream.lyservices.dao.game.GameMapper.game_result" parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper">
+		 SELECT  game.id,game.name,game.icon,game.url,game.star,game.godflag,game.hotflag,game.nowflag,game.recommend
+		 
+		 FROM push_game pg LEFT JOIN game game ON pg.game_id = game.id 
+		 
+		 WHERE pg.status =1 AND pg.pg_type = #{flag}
+		 
+		 ORDER BY pg.sort ASC
+			  	
+	     LIMIT #{start_row},#{end_row}		  	
+	</select>
+	
+	<select id="pushGameListByFlagCount" resultType="int"  parameterType="com.mdream.lyservices.model.game.list.ListPageKeeper" >
+		
+		 SELECT count(*) count
+		
+		 FROM push_game pg LEFT JOIN game game ON pg.game_id = game.id 
+		 
+		 WHERE pg.status =1 AND pg.pg_type = #{flag} AND game.status =1
+			  		   
+	</select>
+	
+</mapper>
